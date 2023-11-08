@@ -11,6 +11,10 @@ export const MovieContainer = styled.div`
   > img {
     max-width: 100%;
   }
+  &:hover {
+    display: block;
+    top: 16px;
+  }
 `;
 
 export const MovieInfo = styled.div`
@@ -40,4 +44,11 @@ export const MovieDetail = styled.div`
   color: white;
 
   position: absolute;
+
+  // MovieContainer가 hover 상태일때만 스타일 적용하게
+
+  ${MovieContainer}:hover & {
+    display: block;
+    top: 16px;
+  }
 `;
