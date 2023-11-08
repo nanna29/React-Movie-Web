@@ -5,8 +5,9 @@ import Movie from "./Movie.jsx";
 
 const AppContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   justify-content: center;
+  margin: auto;
   position: relative;
 `;
 

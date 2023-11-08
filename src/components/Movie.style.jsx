@@ -8,6 +8,7 @@ export const MovieContainer = styled.div`
   color: white;
   border-radius: 5px;
   box-shadow: 3px 3px 5ox rgba(0, 0, 0, 0.1);
+  justify-content: center;
   > img {
     max-width: 100%;
   }
@@ -46,7 +47,6 @@ export const MovieDetail = styled.div`
   position: absolute;
 
   // MovieContainer가 hover 상태일때만 스타일 적용하게
-
   ${MovieContainer}:hover & {
     display: block;
     top: 16px;

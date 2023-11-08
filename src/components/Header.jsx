@@ -5,7 +5,8 @@ import styled from "styled-components";
 
 const HeaderContainer = styled.div`
   background-color: #22254b;
-  margin-left: 50px;
+
+  padding: 20px 0 20px 200px;
   display: flex;
 `;
 
