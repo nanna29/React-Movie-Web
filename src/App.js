@@ -5,10 +5,12 @@ import Celebrity from "./components/Celebrity.jsx";
 import Header from "./components/Header.jsx";
 import Home from "./components/Home.jsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import GlobalStyle from "./components/Global.style.jsx";
 
 function App() {
   return (
-    <div>
+    <>
+      <GlobalStyle />
       <BrowserRouter>
         <Header />
         <Routes>
@@ -18,7 +20,7 @@ function App() {
           <Route path="/Celebrity" element={<Celebrity />} />
         </Routes>
       </BrowserRouter>
-    </div>
+    </>
   );
 }
 
