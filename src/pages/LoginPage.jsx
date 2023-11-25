@@ -1,14 +1,11 @@
-// 현재 서버에서 달라는 값은 아이디고 과제에는 이메일이라서 코드가 좀 꼬였습니다.
-// AXIOS 통신하는 동안 버튼 클릭되지 않게는 못했고, 색깔 바뀌는걸로 했습니다.
-// 애초에 클릭되지 않게 해버리면 id인 umcweb 을 입력해도 버튼이 disabled 되서 제출이 안됩니다.
-// 이부분 차후에 통일하도록 하겠습니다.
-
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPageWrap = styled.div`
-  margin-left: 10px;
+  margin-top: 30px;
+  margin-left: 30px;
 `;
 const InputField = styled.input`
   width: 500px;
@@ -46,6 +43,7 @@ export default function LoginPage() {
   const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const pwPattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
+  const navigate = useNavigate();
   const onChangeEmail = (event) => {
     const newEmail = event.target.value;
     setNewEmail(newEmail);
@@ -88,13 +86,29 @@ export default function LoginPage() {
     // }
   };
 
-  const onClickLoginBtn = () => {
+  const onClickLoginBtn = async () => {
     if (newEmail == "" || newPassword == "") {
-      alert("이메일 주소나 비밀번호를 다시 확인해주세요");
+      alert("아이디나 비밀번호를 다시 확인해주세요");
     } else {
-      //모든 조건이 들어맞고, 확인 버튼이 눌렸을 시에 실행
-      console.log("제출");
-      submitInfo();
+      // 모든 조건이 들어맞고, 확인 버튼이 눌렸을 시에 실행
+      //console.log("제출");
+      const response = await submitInfo(); // 비동기로 실행
+      //console.log(response);
+      setLoadingTxt("Loading...");
+      // 1.5초동안 실행
+      setTimeout(() => {
+        setIsButtonDisabled(false); // 버튼 활성화
+        setLoadingTxt(""); // "Loading..." 제거
+        if (response && response.status === 200) {
+          // 비밀번호 & 아이디 값 맞으면 실행
+
+          navigate(`/`, {
+            state: `${response.status}`,
+          });
+        } else {
+          alert("아이디나 비밀번호를 다시 확인해주세요");
+        }
+      }, 1500);
     }
   };
 
@@ -106,27 +120,19 @@ export default function LoginPage() {
       };
       setIsButtonDisabled(true); // axios를 통신하는 동안 버튼이 클릭되지 않도록
       const response = await axios.post(apiURL, postData);
-      console.log("응답:", response.data, "상태코드:", response.status);
+      //console.log("응답:", response.data, "상태코드:", response.status);
       localStorage.clear();
       localStorage.setItem("id", response.data.result.userId);
       localStorage.setItem("token", response.data.result.AccessToken);
+      return response; // response 객체 반환
     } catch (error) {
       console.error("Error:", error.message);
-    } finally {
-      setLoadingTxt("Loading...");
-      // 1.5초동안
-      setTimeout(() => {
-        setIsButtonDisabled(false); // 버튼 활성화
-        setLoadingTxt(""); // "Loading..." 제거
-      }, 1500);
     }
   };
 
   return (
     <LoginPageWrap>
-      <h1>
-        아이디와 비밀번호를 <br /> 입력해주세요
-      </h1>
+      <h1>아이디와 비밀번호를 입력해주세요</h1>
       <br />
       <h3 style={{ marginBottom: "10px" }}>아이디</h3>
       <InputField type="email" onChange={onChangeEmail} />
@@ -148,7 +154,11 @@ export default function LoginPage() {
       <LoginButton disabled={isButtonDisabled} onClick={onClickLoginBtn}>
         확인
       </LoginButton>
-      <div>{loadingTxt}</div>
+
+      <div>
+        <br />
+        {loadingTxt}
+      </div>
     </LoginPageWrap>
   );
 }
